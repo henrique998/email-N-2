@@ -1,0 +1,19 @@
+POST https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns
+
+{
+  "name": "change",
+  "content": "campaign change",
+  "emails": ["jhondoe2@gmail.com", "henrique3@gmail.com"]
+}
+
+###
+
+GET https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns/cmkpmpnpoceq36mo3vtg
+
+### 
+
+PATCH https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns/cancel/cmjbr3fpocjjjdtkomrg
+
+### 
+
+DELETE https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns/delete/cmkpmpnpoceq36mo3vtg
