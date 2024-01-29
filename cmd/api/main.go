@@ -24,9 +24,13 @@ func main() {
 	handler := endpoints.Handler{
 		CampaignService: &campaignService,
 	}
-	r.Post("/campaigns", endpoints.HandlerError(handler.CampaignPost))
-	r.Get("/campaigns/{id}", endpoints.HandlerError(handler.CampaignFindById))
-	r.Delete("/campaigns/delete/{id}", endpoints.HandlerError(handler.CampaignsDelete))
+
+	r.Route("/campaigns", func(r chi.Router) {
+		r.Use(endpoints.Auth)
+		r.Post("/", endpoints.HandlerError(handler.CampaignPost))
+		r.Get("/{id}", endpoints.HandlerError(handler.CampaignFindById))
+		r.Delete("/delete/{id}", endpoints.HandlerError(handler.CampaignsDelete))
+	})
 
 	http.ListenAndServe(":3333", r)
 }

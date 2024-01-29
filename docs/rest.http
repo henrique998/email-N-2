@@ -1,4 +1,10 @@
-POST https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns
+@url = https://3333-henrique998-emailn2-5wivhr38yuy.ws-us107.gitpod.io
+@identity_provider = https://8080-henrique998-emailn2-5wivhr38yuy.ws-us107.gitpod.io
+
+###
+
+POST {{url}}/campaigns
+Authorization: Bearer {{access_token}}
 
 {
   "name": "change",
@@ -8,12 +14,23 @@ POST https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaig
 
 ###
 
-GET https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns/cmkpmpnpoceq36mo3vtg
+GET {{url}}/campaigns/cms1qm3giqctpvc88rfg
+Authorization: Bearer {{access_token}}
 
 ### 
 
-PATCH https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns/cancel/cmjbr3fpocjjjdtkomrg
+PATCH {{url}}/campaigns/cancel/cmjbr3fpocjjjdtkomrg
 
 ### 
 
-DELETE https://3333-jangaraj-keycloakingitp-ec97a7aeblt.ws-us107.gitpod.io/campaigns/delete/cmkpmpnpoceq36mo3vtg
+DELETE {{url}}/campaigns/delete/cmkpmpnpoceq36mo3vtg
+
+###
+# @name token
+POST {{identity_provider}}/realms/provider/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=emailn&username=henriquemonteiro037@gmail.com&password=123456&grant_type=password
+
+###
+@access_token = {{token.response.body.access_token}}
