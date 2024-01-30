@@ -6,4 +6,5 @@ type CampaignResponseDTO struct {
 	Content       string `json:"content"`
 	Status        string `json:"status"`
 	AmoutOfEmails int    `json:"amountOfEmails"`
+	CreatedBy     string `json:"createdBy"`
 }

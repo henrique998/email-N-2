@@ -26,11 +26,12 @@ type Campaing struct {
 	Name      string    `validate:"min=5,max=24" json:"name" gorm:"size:100"`
 	Content   string    `validate:"min=5,max=1024" json:"content" gorm:"size:1024"`
 	Contacts  []Contact `validate:"min=1,dive" json:"contacts"`
-	CreatedAt time.Time `validate:"required" json:"createdAt"`
+	CreatedBy string    `validate:"email" gorm:"size:50"`
 	Status    string    `gorm:"size:20"`
+	CreatedAt time.Time `validate:"required" json:"createdAt"`
 }
 
-func NewCampaing(name, content string, emails []string) (*Campaing, error) {
+func NewCampaing(name, content string, emails []string, createdBy string) (*Campaing, error) {
 	contacts := make([]Contact, len(emails))
 
 	for i, email := range emails {
@@ -43,8 +44,9 @@ func NewCampaing(name, content string, emails []string) (*Campaing, error) {
 		Name:      name,
 		Content:   content,
 		Contacts:  contacts,
-		CreatedAt: time.Now(),
 		Status:    Pending,
+		CreatedBy: createdBy,
+		CreatedAt: time.Now(),
 	}
 
 	err := internalerrors.ValidateStruct(campaing)

@@ -11,6 +11,9 @@ func (h *Handler) CampaignPost(w http.ResponseWriter, r *http.Request) (interfac
 	var request contracts.NewCampaingDTO
 	render.DecodeJSON(r.Body, &request)
 
+	email := r.Context().Value("email").(string)
+	request.CreatedBy = email
+
 	id, err := h.CampaignService.Create(request)
 
 	return map[string]string{"campaignId": id}, http.StatusCreated, err

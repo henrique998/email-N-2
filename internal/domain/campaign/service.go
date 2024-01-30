@@ -18,7 +18,7 @@ type ServiceImp struct {
 }
 
 func (s *ServiceImp) Create(newCampaing contracts.NewCampaingDTO) (string, error) {
-	campaing, err := NewCampaing(newCampaing.Name, newCampaing.Content, newCampaing.Emails)
+	campaing, err := NewCampaing(newCampaing.Name, newCampaing.Content, newCampaing.Emails, newCampaing.CreatedBy)
 	if err != nil {
 		return "", err
 	}
@@ -43,6 +43,7 @@ func (s *ServiceImp) FindById(campaingId string) (*contracts.CampaignResponseDTO
 		Content:       campaign.Content,
 		Status:        campaign.Status,
 		AmoutOfEmails: len(campaign.Contacts),
+		CreatedBy:     campaign.CreatedBy,
 	}, nil
 }
 
@@ -53,7 +54,7 @@ func (s *ServiceImp) Delete(campaingId string) error {
 	}
 
 	if campaign.Status != Pending {
-		return errors.New("Campaign status invalid")
+		return errors.New("campaign status invalid")
 	}
 
 	campaign.Delete()

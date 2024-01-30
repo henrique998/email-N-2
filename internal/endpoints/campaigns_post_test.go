@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,8 +15,20 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+func setup(body contracts.NewCampaingDTO, createdBy string) (*http.Request, *httptest.ResponseRecorder) {
+	var buf bytes.Buffer
+	json.NewEncoder(&buf).Encode(body)
+	req, _ := http.NewRequest("POST", "/", &buf)
+	ctx := context.WithValue(req.Context(), "email", createdBy)
+	req = req.WithContext(ctx)
+	rr := httptest.NewRecorder()
+
+	return req, rr
+}
+
 func Test_CampaignsPost_Should_Save_New_Campaign(t *testing.T) {
 	assert := assert.New(t)
+	createdByExpected := "test@test.com.br"
 	body := contracts.NewCampaingDTO{
 		Name:    "test",
 		Content: "Hi there!",
@@ -23,7 +36,9 @@ func Test_CampaignsPost_Should_Save_New_Campaign(t *testing.T) {
 	}
 	service := new(internalMock.CampaignServiceMock)
 	service.On("Create", mock.MatchedBy(func(request contracts.NewCampaingDTO) bool {
-		if request.Name == body.Name && request.Content == body.Content {
+		if request.Name == body.Name &&
+			request.Content == body.Content &&
+			request.CreatedBy == createdByExpected {
 			return true
 		} else {
 			return false
@@ -31,10 +46,7 @@ func Test_CampaignsPost_Should_Save_New_Campaign(t *testing.T) {
 	})).Return("34x", nil)
 	handler := Handler{CampaignService: service}
 
-	var buf bytes.Buffer
-	json.NewEncoder(&buf).Encode(body)
-	req, _ := http.NewRequest("POST", "/", &buf)
-	rr := httptest.NewRecorder()
+	req, rr := setup(body, createdByExpected)
 
 	_, status, err := handler.CampaignPost(rr, req)
 
@@ -53,13 +65,9 @@ func Test_CampaignsPost_Should_Inform_Error_When_Exists(t *testing.T) {
 	service.On("Create", mock.Anything).Return("", fmt.Errorf("error"))
 	handler := Handler{CampaignService: service}
 
-	var buf bytes.Buffer
-	json.NewEncoder(&buf).Encode(body)
-	req, _ := http.NewRequest("POST", "/", &buf)
-	rr := httptest.NewRecorder()
+	req, rr := setup(body, "test@test.com.br")
 
 	_, _, err := handler.CampaignPost(rr, req)
 
-	// assert.Equal(id, status)
 	assert.NotNil(err)
 }
